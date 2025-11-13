@@ -30,27 +30,27 @@ void ExecuteAssembler(FILE* bc_file) {
         make_instr(&i, &instr, c);
 
         //Load Constants
-        if (!strcmp(instr, "_consts")) {
-            make_consts(bc_file);
-        }
+        if (!strcmp(instr, "_consts")) {make_consts(bc_file);}
+
         //Load Data
-        else if (!strcmp(instr, "_data")) {
-            make_globals(bc_file);
-        }
-        //Entry Function
-        else if (!strcmp(instr, "_start")) {
-            make_func(bc_file, true);
-        }
+        else if (!strcmp(instr, "_data")) {make_globals(bc_file);}
+
+        //Entry Function 
+        //{Only diff is that it notes address in _entry_point and doesn't 
+        //make use of function specific Instructions e.g. LOADA}
+        else if (!strcmp(instr, "_start")) {make_func(bc_file, true);}
+
         //Load Functions
-        else if (!strcmp(instr, "_func")) {
-            make_func(bc_file, false);
-        }
+        else if (!strcmp(instr, "_func")) {make_func(bc_file, false);}
     }
 
-    //Second Pass
+    //Second Pass {For now, it only resolves forwards and backward refrences}
     resolve_refs();
 
-    //Final Results:-
+    //These commented lines have helped me immensly when it comes to debugging the assembler
+    //Maybe uncommented when debugging is needed
+
+    // printf("#========Final Results==========#:-\n");
     // printf("Symbol Table:-\n");
     // for (int32_t i = 0; i < symbol_table_size; i++) {
     //     printf("[%d] %s\n", i, symbol_table[i]);
@@ -63,5 +63,6 @@ void ExecuteAssembler(FILE* bc_file) {
     // for (int32_t i = 0; i < _code_size; i++) {
     //     printf("[%d] 0x%02X\n", i, _code[i]);
     // }
+
     return;
 }

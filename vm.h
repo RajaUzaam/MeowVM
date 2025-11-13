@@ -6,69 +6,60 @@
 #include "instruction_set.h"
 #include "utils.h"
 
-#define OPERAND_SIZE 2
-#define OPCODE_SIZE 1
+#define OPERAND_SIZE 2//bytes
+#define OPCODE_SIZE 1//byte
 
-// typedef enum Opcodes {
-//     STOP = 0,
-//     OUT,
-//     PUSHI,
-//     STOREG,
-//     LOADG,
-//     ADDI,
-//     SUBI,
-//     MULI,
-//     DIVI,
-//     JMP,
-//     CALL,
-//     RET,
-//     ENTER,
-//     LOADA,
-//     LOADL,
-//     STOREL
-// } Opcodes;
-
+//This struct will be returned by "Fetch" and loaded by the "Decode"
 typedef struct Instruction {
     uint8_t opcode;
     int16_t operand;
 } Instruction;
 
+//Stack and related registers
 extern int32_t *stack;
 extern int32_t stack_size;
 extern int32_t sp;
 extern int32_t fp;
-extern int32_t ep;
 
+//Storage of Global Variables
 extern int32_t *globals;
 extern int32_t globals_size;
 
+//Code Array that stores the binary instructions
 extern uint8_t *code;
 extern int32_t code_size;
 extern int32_t ip;
 
+//Const table used to refer to constants
 extern int32_t *co_consts;
 extern int32_t co_consts_size;
 
+typedef struct VMInstance {
+    int name;
+} VMInstance;
+
 #endif
 
+//Virual Machine
 int ExecuteVM();
 
+//Stack Funcs
 void push_int(int32_t val);
 int32_t pop_int();
-//void add_op_code(int8_t val);
+
+//Global Vars Funcs
 void store_globals(int16_t addr, int32_t val);
 int32_t get_globals(int16_t addr);
-Instruction fetch_instruction();
-int8_t oper_size(Opcodes opcode);
-bool decode_execute(Instruction Instruction);
-//int32_t get_op(char* op);
-//int32_t get_code_op(char* op);
-void add_oper_code(int16_t val);
-int16_t search_const(int32_t val);
-//void add_const(int32_t val);
 
-//BC Loader
-//void loadbc(FILE* bc_file);
+//F-E Cycle Funcs
+Instruction fetch_instruction();
+bool decode_execute(Instruction Instruction);
+
+//Const Table Funcs
+int16_t search_const(int32_t val);
+
+//Code Funcs
+int8_t oper_size(Opcodes opcode);
 
 // Instructions
 bool stop();

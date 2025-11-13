@@ -16,7 +16,6 @@ void create_ref(char *name, int32_t addr, RefType type) {
 
 int32_t search_refs(char* name, RefType type, bool *found) {
     for (int32_t i = 0; i < refrences_size; i++) {
-        //printf("|%s| |%d|\n", refrences[i].name, refrences[i].type);
         if (!strcmp(refrences[i].name, name) && (refrences[i].type == type)) {
             *found = true;
             return refrences[i].addr;
@@ -27,30 +26,18 @@ int32_t search_refs(char* name, RefType type, bool *found) {
 }
 
 void resolve_refs() {
-    // printf("References:- \n");
-    // for (int32_t i = 0; i < refrences_size; i++) {
-    //     printf("{NAME} [%s] {ADDR} [0x%02X]\n", refrences[i].name, refrences[i].addr);
-    // }
-    // printf("Unresolved References:- \n");
-    // for (int32_t i = 0; i < unresolved_refrences_size; i++) {
-    //     printf("{NAME} [%s] {ADDR} [0x%02X]\n", unresolved_refrences[i].name, unresolved_refrences[i].addr);
-    // }
-    // printf("Resolving References:- \n");
     bool found;
     int32_t found_addr;
     int16_t relative_addr;
     for (int32_t i = 0; i < unresolved_refrences_size; i++) {
-        //printf("Uresolved |%s|\n", unresolved_refrences[i].name);
         found_addr = search_refs(unresolved_refrences[i].name, unresolved_refrences[i].type, &found);
         if (found) {
-            //printf("{%s} [0x%02X] [0x%02X]\n", unresolved_refrences[i].name, unresolved_refrences[i].addr, found_addr);
             if (unresolved_refrences[i].type == JMP_REF) {
                 relative_addr = found_addr - (unresolved_refrences[i].addr-1);
             }
             else {
                 relative_addr = found_addr;
             }
-            //printf("{RELATIVE} [0x%02X]\n", relative_addr);
             memcpy(&_code[unresolved_refrences[i].addr], &relative_addr, sizeof(int16_t));
         } else {
             printf("Reference: \"%s\" not found!", unresolved_refrences[i].name);
